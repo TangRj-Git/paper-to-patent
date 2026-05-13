@@ -1,0 +1,4 @@
+interface:
+  display_name: "小论文转发明专利"
+  short_description: "自动将小论文转写为发明专利草案、权利要求和附图方案"
+  default_prompt: "请使用该 skill，根据我提供的小论文生成发明专利草案、权利要求框架、附图解析和检查报告。"
