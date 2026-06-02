@@ -1,89 +1,95 @@
 ---
 name: paper-to-patent
-description: Use when converting academic papers, thesis drafts, technical reports, or experiment write-ups into Chinese invention patent materials, including patent feasibility review, paper-to-patent mapping, patent outline, claims framework, specification draft, formula/terminology/source checks, patent figure analysis, SVG patent drawings, and final PDF review. 适用于小论文转发明专利、论文生成发明专利草案、权利要求书或权利要求框架、专利说明书、专利附图、附图解析、SVG 附图、正文检查、公式检查、术语检查和 PDF 终稿检查。
+description: Use when converting LaTeX or PDF academic papers, thesis drafts, technical reports, experiment write-ups, algorithm/model methods, software systems, or engineering schemes into Chinese invention patent workflow materials and application documents, including technical disclosure, prior-art search planning, feasibility review, paper-to-patent mapping, protection strategy, claims, specification, abstract, drawings, formula/terminology checks, and final submission review.
 ---
 
 # Paper To Patent
 
 ## Core Rule
 
-Transform a paper into a patent by stages. Prefer Markdown artifacts for content and checks. Do not generate Word directly unless the user explicitly asks and a document tool is available.
+Work by stages. Prefer the paper's LaTeX source over PDF text extraction. Keep source traceability: every core patent feature must come from the supplied paper or be marked as an assumption needing user confirmation.
 
-Always preserve source traceability: every core patent feature should come from the supplied paper or be clearly marked as an assumption needing user confirmation.
+Do not promise legal safety, novelty, inventiveness, authorization, or grantability. Recommend supervisor or patent-agent review before filing.
 
-## References
+Prefer Markdown artifacts. Do not generate Word, PPT, DOCX, or batch figures unless the user explicitly asks and the required tool is available.
 
-Load only what is needed:
+## Input Priority
 
-- For full execution order, stage gates, artifact names, figure workflow, and final PDF checks, read `references/小论文生成发明专利完整工作流程.md`.
-- For wording, claims, specification structure, formulas, figure requirements, and patent-style phrase templates, read `references/小论文转发明专利通用参考模板.md`.
+1. Use `main.tex` plus included `.tex`, `.bib`, and figure files as the primary source.
+2. Use PDF only for visual verification, page/figure checks, or when LaTeX is unavailable.
+3. Use plain text, screenshots, or notes only when neither LaTeX nor PDF is available.
 
-If context is tight, read headings first, then load only the relevant section.
+For LaTeX projects, run or adapt `scripts/extract_latex_structure.py` to create `draft/internal/latex-structure-summary.md` before patent drafting.
 
-## Default Workflow
+## Stage Router
 
-When the user asks for a complete conversion, follow this order:
+Load only the reference needed for the user's current stage:
 
-1. Ingest the paper and supporting files.
-2. Check public-disclosure and novelty risk when the publication status is known or ask the user if it is necessary.
-3. Decide whether the paper is suitable for invention patent drafting.
-4. Create `论文-专利内容映射表.md`.
-5. Create `当前小论文专属专利大纲.md`.
-6. Create `权利要求框架.md`.
-7. Create the patent content draft as Markdown, usually `发明专利正文_初稿.md` or `发明专利正文_严格来源论文版.md`.
-8. Check source consistency, formulas, terminology, claims support, and patent-style wording.
-9. After content is approved, create `发明专利附图详细解析.md`.
-10. Generate SVG figures one at a time, checking each before moving to the next.
-11. Generate PPT-editable versions one at a time only when requested.
-12. Leave Word assembly to the user unless explicitly requested.
-13. If a PDF final version is provided, check visible content, metadata, old-template residue, formulas, and figure-text correspondence.
+| User task | Read | Required outputs |
+|---|---|---|
+| Full conversion request or unclear stage | `references/workflow-overview.md` | Stage plan and next action |
+| LaTeX/PDF intake and source extraction | `references/latex-intake.md` | `draft/internal/latex-structure-summary.md` for LaTeX input |
+| Publication status and novelty-risk intake | `references/intake-and-risk.md` | `draft/internal/公开时间与新颖性风险检查.md` when risk review is requested |
+| Technical disclosure from the paper | `references/technical-disclosure.md` | `draft/internal/技术交底书.md` |
+| Prior-art or similar-patent search planning | `references/prior-art-search.md` | `draft/internal/现有技术检索报告.md` |
+| Decide whether the paper can become a patent | `references/feasibility.md` | `draft/internal/专利可行性判断报告.md` |
+| Build paper-to-patent mapping and dedicated outline | `references/mapping-and-outline.md` | `draft/internal/论文-专利内容映射表.md`, `draft/internal/当前小论文专属专利大纲.md` |
+| Analyze protection scope and claim strategy | `references/protection-strategy.md` | `draft/internal/保护点策略分析.md` |
+| Draft claims | `references/claims.md`, then `references/patent-phrases.md` if wording help is needed | `draft/application/权利要求书.md` |
+| Draft specification | `references/specification.md`, then `references/patent-phrases.md` | `draft/application/说明书.md` |
+| Draft five application-document set | `references/application-documents.md` | `draft/application/请求书信息表.md`, `draft/application/权利要求书.md`, `draft/application/说明书.md`, `draft/application/说明书摘要.md`, `draft/application/说明书附图清单.md` |
+| Check source, formulas, terminology, claims support | `references/review-source-formula-terms.md` | `draft/internal/发明专利正文检查报告.md` and optional `draft/application/说明书_严格来源论文修订版.md` |
+| Plan or create patent figures | `references/figures.md` | `figures/发明专利附图详细解析.md`, `draft/application/说明书附图清单.md`, then one SVG per confirmed figure |
+| Check submission format before agent/supervisor review | `references/submission-format-check.md` | `final/提交前格式检查.md` |
+| Check final Word/PDF | `references/final-pdf-review.md` | `final/发明专利PDF终稿检查报告.md` |
+| Current CNIPA/legal drafting constraints are relevant | `references/cnipa-current-rules.md` | Add current-rule notes to the relevant report; verify current facts from official sources when needed |
+
+For a complete conversion, follow the stage order in `references/workflow-overview.md`. Stop at each stage gate unless the user explicitly asks to continue.
+
+## Five-Document Mapping
+
+The generated application materials should map to the Chinese invention patent "五书" structure:
+
+| Module | Skill artifact |
+|---|---|
+| 请求书 | `draft/application/请求书信息表.md` as an information checklist, not an official form replacement |
+| 权利要求书 | `draft/application/权利要求书.md` |
+| 说明书 | `draft/application/说明书.md` |
+| 说明书摘要 | `draft/application/说明书摘要.md` |
+| 说明书附图 | `draft/application/说明书附图清单.md` plus confirmed figure files in `figures/` |
+
+If drawings are used, also prepare `draft/application/摘要附图说明.md` or clearly mark which drawing is recommended as the abstract drawing.
 
 ## Stage Gates
 
-Use these gates unless the user explicitly asks to skip them:
+- Do not draft full patent content before intake, technical disclosure, mapping table, and dedicated outline are clear.
+- Do not draft claims before identifying the independent method/system protection point.
+- Do not draft figures before the claims/specification relationship has been checked.
+- Do not generate multiple SVG or PPT figures in one step unless the user explicitly requests batch generation.
+- Do not treat publication-risk checks or prior-art search as legal advice.
+- Do not add unsupported modules, effects, applications, or closed-loop control features beyond the paper.
 
-- Do not draft full patent content before the paper-to-patent mapping and patent outline are clear.
-- Do not generate figures before the patent content is approved.
-- Do not generate multiple figures in one step unless the user explicitly requests batch generation.
-- Do not claim the patent is legally safe or grantable; recommend final review by a supervisor or patent agent.
+## Tool And Script Use
 
-## Drafting Constraints
+This skill does not automatically create a separate agent. The current Codex instance follows these staged instructions. Use subagents only when the user explicitly asks for parallel review or the environment provides a suitable workflow.
 
-Use patent-style expression:
+Use bundled scripts for deterministic checks when applicable. Resolve script paths relative to this skill folder before running them from a patent project directory.
 
-- Focus on technical problem, technical solution, implementation flow, and beneficial effects.
-- Write clear inputs, processing steps, outputs, and application modules.
-- Avoid paper-style emphasis on experiments, comparison tables, and numerical performance unless the user asks.
-- Avoid unsupported expansion beyond the paper.
-- For algorithm/model patents, connect the algorithm to a concrete technical field and technical process.
-- For formulas, write them in readable LaTeX-style Markdown, explain every symbol, and state what each formula computes and where the result is used.
+- `scripts/make_project_dirs.py`: create the recommended LaTeX-first project folders.
+- `scripts/extract_latex_structure.py`: extract title, abstract, sections, equations, figures, tables, labels, refs, citations, and bibliography from `main.tex`.
+- `scripts/extract_pdf_text.py`: extract or copy paper text into Markdown/text form when LaTeX is unavailable.
+- `scripts/inspect_pdf_metadata.py`: inspect PDF metadata when `pdfinfo` is available.
+- `scripts/validate_artifacts.py`: check whether required stage artifacts exist.
+- `scripts/check_svg.py`: parse SVG and report basic drawing-quality issues.
 
-## Figure Rules
+Use external tools only when available and relevant:
 
-Patent figures should be black-and-white line diagrams, flowcharts, module diagrams, data-construction diagrams, model-structure diagrams, training/prediction diagrams, or system-architecture diagrams.
+- PDF tools such as `pdftotext`, `pdfinfo`, and `pdftoppm` for extraction, metadata, and rendered-page checks.
+- Image/browser preview tools for SVG and rendered PDF inspection.
+- Web search only for current laws, official requirements, prior art, source attribution, or changed external facts.
+- DOCX/document tools only when the user explicitly asks to edit Word directly.
+- Presentation tools only when editable PPT figures are requested.
 
-For each figure:
+## Output Rules
 
-1. Explain its purpose and corresponding patent paragraphs before generating it.
-2. Keep text short and consistent with the claims/specification.
-3. Avoid experiment charts, result curves, decorative images, and unnecessary formulas.
-4. Check arrows, module names, figure number, text overlap, and correspondence with the specification.
-
-## Tool Guidance
-
-Use available tools according to the task and environment:
-
-- Use file-system tools to read the paper, create Markdown artifacts, save SVG files, and organize outputs.
-- Use PDF utilities such as `pdfinfo`, `pdftotext`, and `pdftoppm` when available to inspect PDF metadata, extract text, render pages, find old-template residue, and check figure-text correspondence.
-- Use image viewing or browser-preview tools to inspect rendered PDF pages and generated SVG figures.
-- Generate SVG directly when possible; use draw.io/svgmaker-style tools only when they are available and beneficial.
-- Use presentation tools such as python-pptx or a Presentations plugin only when the user asks for editable PPT figures.
-- Use DOCX/document tools only when the user explicitly asks to edit Word directly; otherwise prefer Markdown drafts and let the user assemble Word manually.
-- Use web search only when current official requirements, laws, rules, or source attribution must be verified.
-- Use skill-creation tools only when maintaining or packaging this skill, not during normal paper-to-patent conversion.
-
-## Output Style
-
-Write Chinese patent materials in Chinese unless the user asks otherwise.
-
-When creating files, use clear filenames and report the paths changed. Keep intermediate artifacts separate from final Word/PDF files when possible.
+Write Chinese patent materials in Chinese unless the user asks otherwise. Keep source summaries and internal analysis in `draft/internal/`; keep application-facing drafts in `draft/application/`; keep figures, PPT, and final checks in separate folders. When information is missing, list the missing inputs and continue only with clearly labeled assumptions.
