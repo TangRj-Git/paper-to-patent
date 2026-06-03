@@ -1,61 +1,65 @@
 # Claims Drafting
 
-Use this file to draft `draft/application/权利要求书.md`. Use `assets/templates/claims.md` for the formal draft or `assets/templates/claims-framework.md` only when the user asks for a strategy/framework instead of a full claims draft.
+Use this file to draft `draft/application/权利要求书.md`. Use `assets/templates/claims.md` for the formal Markdown draft.
+
+When the protection scope is not yet stable, first create `draft/internal/权利要求框架.md` from `assets/templates/claims-framework.md`. Treat it as a stage gate before the formal claims.
+
+## Source Rule
+
+Base every claim on the LaTeX paper, confirmed technical disclosure, mapping table, and protection strategy. PDF text is fallback material only. If a claim feature is not in the paper, mark it as a user-confirmation item before adding it to the formal claims.
 
 ## Claim Layout
 
-For algorithm, software, data-processing, system, monitoring, prediction, scheduling, or control papers, consider:
+For algorithm, software, data-processing, monitoring, prediction, scheduling, optimization, or system papers, consider:
 
 1. Independent method claim.
-2. Dependent method claims for inputs, preprocessing, feature construction, model structure, calculation, training, output, or application.
-3. System/device claim mirroring method steps.
-4. Electronic device claim.
-5. Computer-readable storage medium claim.
+2. Dependent method claims for inputs, preprocessing, feature construction, model structure, calculation, training, output, and application.
+3. System or device claim mirroring method steps.
+4. Electronic device claim when the method is software-executable.
+5. Computer-readable storage medium claim when appropriate.
 
-For the final application-facing artifact, write numbered claims directly. Keep strategy notes in `draft/internal/保护点策略分析.md`, not inside the claims document.
+Only include a computer program product claim when the user or patent agent requests it.
 
 ## Independent Method Claim
 
-The independent method claim should cover:
+The independent method claim should cover a complete technical loop:
 
 - target object or application scenario;
 - input data;
-- key processing steps;
-- core model/algorithm/system operation;
+- construction of intermediate representation;
+- core model, algorithm, module interaction, or processing step;
 - output result;
-- technical purpose of the output.
+- technical use of the output.
 
-Do not include experiment rankings, exact performance numbers, random seeds, dataset-only details, or future work.
+Do not include experiment rankings, exact performance numbers, random seeds, dataset-only details, paper contribution language, or future work.
+
+## Dependent Claims
+
+Group dependent claims by technical layer:
+
+- input data and acquisition;
+- data alignment, preprocessing, feature construction, or graph/sequence construction;
+- model, algorithm, module structure, formula, loss, or constraint;
+- output, decision, prediction, scheduling, diagnosis, or warning;
+- training or optimization details when they are part of the technical solution.
 
 ## System Claim
 
-Convert method steps into modules:
+Convert method steps into modules after method terms are stable. Module names must match the specification and figure positions.
+
+Common module pattern:
 
 - data acquisition module;
-- data processing or preprocessing module;
-- feature/model construction module;
+- intermediate construction module;
 - core processing module;
 - result output module;
-- application/decision-support module.
+- application or decision-support module.
 
-Module names must match the specification and figures.
+## Formal Style Checks
 
-## Device And Medium Claims
-
-Use these only when the method can be implemented by software or program execution:
-
-```text
-一种电子设备，包括处理器和存储器，所述存储器存储有计算机程序，其特征在于，所述处理器执行所述计算机程序时实现权利要求1至N中任一项所述的方法。
-```
-
-```text
-一种计算机可读存储介质，其上存储有计算机程序，其特征在于，所述计算机程序被处理器执行时实现权利要求1至N中任一项所述的方法。
-```
-
-## Checks
-
-- Independent claim covers the full technical loop.
-- Dependent claims add real limitations without repeating the full independent claim.
-- Claims are supported by the mapping table and outline.
-- Terms are consistent with the paper and future specification.
-- Every claim term can be located in `draft/application/说明书.md`.
+- Number claims directly in Markdown.
+- Do not use "如图所示" or "如说明书所述".
+- Do not put drawings into the claims.
+- Use consistent terms with the specification.
+- Each claim should end with one full stop.
+- Keep strategy notes in `draft/internal/保护点策略分析.md`, not in the formal `权利要求书.md`.

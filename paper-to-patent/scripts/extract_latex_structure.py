@@ -109,6 +109,10 @@ def iter_environment(text: str, name: str) -> Iterable[tuple[str, int, int]]:
         yield text[content_start:content_end].strip(), begin.start(), begin.end() + end_match.end()
 
 
+def environment_variants(name: str) -> tuple[str, str]:
+    return name, f"{name}*"
+
+
 def resolve_tex_path(current_file: Path, argument: str) -> Path:
     candidate = Path(argument.strip())
     if candidate.suffix == "":
@@ -118,19 +122,43 @@ def resolve_tex_path(current_file: Path, argument: str) -> Path:
     return candidate
 
 
-def read_with_inputs(path: Path, seen: set[Path] | None = None, included: list[str] | None = None) -> str:
+def read_text_with_fallback(path: Path) -> str:
+    for encoding in ("utf-8", "utf-8-sig", "gbk"):
+        try:
+            return path.read_text(encoding=encoding)
+        except UnicodeDecodeError:
+            continue
+    return path.read_text(encoding="utf-8", errors="replace")
+
+
+def relative_or_name(path: Path, base_dir: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(base_dir.resolve())).replace("\\", "/")
+    except ValueError:
+        return str(path)
+
+
+def read_with_inputs(
+    path: Path,
+    seen: set[Path] | None = None,
+    included: list[str] | None = None,
+    missing_files: list[str] | None = None,
+    base_dir: Path | None = None,
+) -> str:
     seen = seen if seen is not None else set()
     included = included if included is not None else []
+    missing_files = missing_files if missing_files is not None else []
     resolved = path.resolve()
+    base_dir = base_dir or resolved.parent
     if resolved in seen:
         return ""
     seen.add(resolved)
     included.append(str(resolved))
 
-    text = strip_comments(resolved.read_text(encoding="utf-8"))
+    text = strip_comments(read_text_with_fallback(resolved))
     output: list[str] = []
     cursor = 0
-    include_pattern = re.compile(r"\\(input|include)\*?(?![A-Za-z])")
+    include_pattern = re.compile(r"\\(input|include|subfile)\*?(?![A-Za-z])")
     for match in include_pattern.finditer(text):
         index = skip_optional_arguments(text, match.end())
         if index >= len(text) or text[index] != "{":
@@ -142,8 +170,9 @@ def read_with_inputs(path: Path, seen: set[Path] | None = None, included: list[s
         output.append(text[cursor : match.start()])
         include_path = resolve_tex_path(resolved, argument)
         if include_path.exists():
-            output.append(read_with_inputs(include_path, seen, included))
+            output.append(read_with_inputs(include_path, seen, included, missing_files, base_dir))
         else:
+            missing_files.append(relative_or_name(include_path, base_dir))
             output.append(f"\n% Missing input file: {argument}\n")
         cursor = end
     output.append(text[cursor:])
@@ -161,41 +190,48 @@ def extract_sections(text: str) -> list[dict[str, str]]:
 def extract_equations(text: str) -> list[dict[str, str]]:
     equations: list[tuple[int, dict[str, str]]] = []
     for name in EQUATION_ENVIRONMENTS:
-        for content, start, _ in iter_environment(text, name):
-            equations.append(
-                (
-                    start,
-                    {
-                        "environment": name,
-                        "label": first_command_arg(content, "label"),
-                        "content": normalize_text(content),
-                    },
+        for env_name in environment_variants(name):
+            for content, start, _ in iter_environment(text, env_name):
+                equations.append(
+                    (
+                        start,
+                        {
+                            "environment": env_name,
+                            "label": first_command_arg(content, "label"),
+                            "content": normalize_text(content),
+                        },
+                    )
                 )
-            )
     return [equation for _, equation in sorted(equations, key=lambda item: item[0])]
 
 
 def extract_figures(text: str) -> list[dict[str, object]]:
     figures: list[dict[str, object]] = []
-    for content, _, _ in iter_environment(text, "figure"):
-        figures.append(
-            {
-                "caption": first_command_arg(content, "caption"),
-                "label": first_command_arg(content, "label"),
-                "graphics": [arg for arg, _, _ in iter_command_args(content, "includegraphics")],
-            }
-        )
+    for env_name in environment_variants("figure"):
+        for content, _, _ in iter_environment(text, env_name):
+            figures.append(
+                {
+                    "environment": env_name,
+                    "caption": first_command_arg(content, "caption"),
+                    "label": first_command_arg(content, "label"),
+                    "graphics": [arg for arg, _, _ in iter_command_args(content, "includegraphics")],
+                }
+            )
     return figures
 
 
 def extract_tables(text: str) -> list[dict[str, str]]:
-    return [
-        {
-            "caption": first_command_arg(content, "caption"),
-            "label": first_command_arg(content, "label"),
-        }
-        for content, _, _ in iter_environment(text, "table")
-    ]
+    tables: list[dict[str, str]] = []
+    for env_name in environment_variants("table"):
+        for content, _, _ in iter_environment(text, env_name):
+            tables.append(
+                {
+                    "environment": env_name,
+                    "caption": first_command_arg(content, "caption"),
+                    "label": first_command_arg(content, "label"),
+                }
+            )
+    return tables
 
 
 def extract_keys(text: str, commands: Iterable[str]) -> list[str]:
@@ -210,11 +246,13 @@ def extract_keys(text: str, commands: Iterable[str]) -> list[str]:
 
 def extract_project(main_tex: Path) -> dict[str, object]:
     included_files: list[str] = []
-    text = read_with_inputs(main_tex, included=included_files)
+    missing_files: list[str] = []
+    text = read_with_inputs(main_tex, included=included_files, missing_files=missing_files)
     abstract = next((normalize_text(content) for content, _, _ in iter_environment(text, "abstract")), "")
     return {
         "source": str(main_tex),
         "included_files": included_files,
+        "missing_files": missing_files,
         "title": first_command_arg(text, "title"),
         "abstract": abstract,
         "sections": extract_sections(text),
@@ -245,6 +283,9 @@ def to_markdown(result: dict[str, object]) -> str:
         "## 已读取文件",
     ]
     lines.extend(f"- `{path}`" for path in result.get("included_files", []))
+    if result.get("missing_files"):
+        lines.extend(["", "## 缺失文件"])
+        lines.extend(f"- `{path}`" for path in result.get("missing_files", []))
 
     lines.extend(["", "## 章节结构"])
     if sections:

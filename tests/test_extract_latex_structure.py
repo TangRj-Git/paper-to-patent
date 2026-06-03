@@ -88,6 +88,7 @@ class ExtractLatexStructureTests(unittest.TestCase):
         sample = {
             "source": "main.tex",
             "included_files": ["main.tex"],
+            "missing_files": ["sections/missing.tex"],
             "title": "Paper Title",
             "abstract": "Abstract text",
             "sections": [{"level": "section", "title": "Method"}],
@@ -106,6 +107,42 @@ class ExtractLatexStructureTests(unittest.TestCase):
         self.assertIn("## 可转专利重点线索", markdown)
         self.assertIn("Paper Title", markdown)
         self.assertIn("System flow", markdown)
+        self.assertIn("## 缺失文件", markdown)
+        self.assertIn("sections/missing.tex", markdown)
+
+    def test_reports_missing_inputs_and_extracts_starred_environments(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            project = Path(tmp)
+            (project / "main.tex").write_text(
+                textwrap.dedent(
+                    r"""
+                    \title{Starred Environments}
+                    \section*{Unnumbered Background}
+                    \input{sections/missing}
+                    \begin{align*}
+                    z &= x + y
+                    \end{align*}
+                    \begin{figure*}
+                    \includegraphics{wide-system}
+                    \caption{Wide system architecture}
+                    \label{fig:wide}
+                    \end{figure*}
+                    \begin{table*}
+                    \caption{Wide result table}
+                    \label{tab:wide}
+                    \end{table*}
+                    """
+                ).strip(),
+                encoding="utf-8",
+            )
+
+            result = extract_latex_structure.extract_project(project / "main.tex")
+
+            self.assertEqual(result["missing_files"], ["sections/missing.tex"])
+            self.assertEqual(result["sections"][0]["title"], "Unnumbered Background")
+            self.assertEqual(result["equations"][0]["environment"], "align*")
+            self.assertEqual(result["figures"][0]["caption"], "Wide system architecture")
+            self.assertEqual(result["tables"][0]["caption"], "Wide result table")
 
 
 if __name__ == "__main__":

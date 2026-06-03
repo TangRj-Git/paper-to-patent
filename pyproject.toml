@@ -1,6 +1,6 @@
 [project]
 name = "paper-to-patent-skill"
-version = "0.3.0"
+version = "0.5.0"
 description = "Codex skill for LaTeX-first staged conversion of academic papers into Chinese invention patent drafting materials."
 readme = "README.md"
 requires-python = ">=3.10"

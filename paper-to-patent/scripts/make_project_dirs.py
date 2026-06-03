@@ -10,8 +10,7 @@ FOLDERS = (
     "reference/prior-art",
     "draft/internal",
     "draft/application",
-    "figures",
-    "ppt",
+    "draft/figures",
     "final",
 )
 

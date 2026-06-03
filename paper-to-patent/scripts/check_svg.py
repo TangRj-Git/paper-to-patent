@@ -69,6 +69,14 @@ def inspect_svg(svg_path: Path) -> dict[str, object]:
     return {"ok": not errors, "errors": errors, "warnings": warnings}
 
 
+def is_acceptable(report: dict[str, object], strict: bool = False) -> bool:
+    if not report["ok"]:
+        return False
+    if strict and report["warnings"]:
+        return False
+    return True
+
+
 def print_text_report(report: dict[str, object]) -> None:
     if report["ok"]:
         print("OK: SVG parsed successfully")
@@ -86,6 +94,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Check basic SVG patent figure quality.")
     parser.add_argument("svg", type=Path, help="SVG file to inspect.")
     parser.add_argument("--json", action="store_true", help="Print JSON report.")
+    parser.add_argument("--strict", action="store_true", help="Fail when SVG has warnings.")
     args = parser.parse_args(argv)
 
     report = inspect_svg(args.svg)
@@ -93,7 +102,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         print(json.dumps(report, ensure_ascii=False, indent=2))
     else:
         print_text_report(report)
-    return 0 if report["ok"] else 1
+    return 0 if is_acceptable(report, strict=args.strict) else 1
 
 
 if __name__ == "__main__":

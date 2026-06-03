@@ -26,12 +26,12 @@ class MakeProjectDirsTests(unittest.TestCase):
                 "reference/prior-art",
                 "draft/internal",
                 "draft/application",
-                "figures",
-                "ppt",
+                "draft/figures",
                 "final",
             ]
             for folder in expected:
                 self.assertTrue((project / folder).is_dir(), folder)
+            self.assertFalse((project / "ppt").exists())
 
 
 if __name__ == "__main__":

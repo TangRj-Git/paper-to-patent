@@ -2,9 +2,9 @@
 
 Use this file when the user asks for similar patents, novelty risk, prior art, or search planning.
 
-## Important Boundary
+## Boundary
 
-This skill can plan searches, summarize user-provided results, and compare technical features. It cannot guarantee novelty or freedom to operate.
+This skill can plan searches, summarize user-provided results, and compare technical features. It cannot guarantee novelty, inventiveness, authorization, grantability, or freedom to operate.
 
 Use web search only when the user requests current or external search, and prefer official patent databases or reliable source links. For CNIPA/current legal requirements, verify from official sources.
 
@@ -16,7 +16,7 @@ Include:
 
 1. Invention theme and technical field.
 2. Chinese and English keyword groups.
-3. Applicant/inventor/lab/company names if relevant.
+3. Applicant, inventor, lab, or company names if relevant.
 4. IPC/CPC clues if known.
 5. Core technical features used as search filters.
 6. Similar-paper and similar-patent comparison table.
@@ -32,3 +32,7 @@ Compare by technical features, not by title similarity. Focus on:
 - key formulas or parameter constraints;
 - output and technical purpose;
 - differences that may support protection scope.
+
+## Effect On Drafting
+
+Use the search report to adjust background technology, independent-claim breadth, dependent-claim fallback features, and specification distinction points. Do not copy prior-art text into the five Markdown documents without source attribution and user confirmation.

@@ -1,6 +1,6 @@
 # Technical Disclosure
 
-Use this file after source intake and before feasibility, mapping, or claims.
+Use this file after LaTeX/PDF intake and before feasibility, mapping, protection strategy, or claims.
 
 ## Purpose
 
@@ -18,13 +18,19 @@ Create `draft/internal/技术交底书.md` using `assets/templates/technical-dis
 6. Step-by-step method flow or system architecture.
 7. Key formulas and symbol meanings.
 8. Technical effects supported by the paper.
-9. Possible drawings.
+9. Possible drawing positions.
 10. Source traceability table.
 11. Missing information and assumptions.
 
 ## Rules
 
+- Use LaTeX as the source of truth when available.
 - Translate academic novelty into technical contribution.
 - Do not copy paper literature review as background.
 - Keep experiment metrics as support for effect, not as claim limitations.
 - Mark every unsupported extension as "待确认".
+- Do not draft all five application documents from the disclosure in one step.
+
+## Gate
+
+Proceed to feasibility and mapping only after the core technical loop is clear: input, processing, output, and technical effect.

@@ -1,22 +1,23 @@
 # Mapping And Dedicated Outline
 
-Use this file after feasibility review and before claims/specification drafting.
+Use this file after feasibility review and before protection strategy, claims, or specification drafting.
 
 ## Mapping Table Purpose
 
-The mapping table prevents unsupported expansion. Every patent feature should map back to the paper or be marked as an assumption.
+The mapping table prevents unsupported expansion. Every patent feature should map back to the LaTeX paper or be marked as an assumption needing user confirmation.
 
 Create `draft/internal/论文-专利内容映射表.md` using `assets/templates/mapping-table.md`.
 
 Recommended rows:
 
-- research background -> background technology;
-- method flow -> claims and detailed embodiments;
-- model/system structure -> claims, embodiments, figures;
-- formulas -> embodiments and symbol explanation;
-- experiment results -> beneficial effects only when appropriate;
-- ablation/comparison -> usually excluded;
-- future work -> excluded unless already implemented.
+- research background to 背景技术;
+- method flow to 权利要求书 and 具体实施方式;
+- model/system structure to 权利要求书, 说明书, and 说明书附图;
+- formulas to 具体实施方式 and symbol explanation;
+- data processing to claims and embodiments;
+- experiment results to 有益效果 only when appropriate;
+- ablation/comparison to usually excluded;
+- future work to excluded unless already implemented.
 
 ## Dedicated Patent Outline
 
@@ -27,7 +28,7 @@ Include:
 1. Candidate invention title.
 2. Technical field.
 3. Existing technical problem.
-4. Technical solution summary.
+4. Core technical solution.
 5. Key technical features.
 6. Protection-point strategy.
 7. Claim layout.
@@ -35,7 +36,8 @@ Include:
 9. Formula usage plan.
 10. Figure list and figure purpose.
 11. Paper content that must be excluded.
+12. Stage-by-stage generation order for the five Markdown documents.
 
 ## Gate
 
-Do not draft claims until the mapping table and outline clearly identify the independent method claim candidate.
+Do not draft claims until the mapping table and outline clearly identify the independent method claim candidate and the key dependent-claim groups.

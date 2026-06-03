@@ -12,8 +12,10 @@ Use this file for wording help after the stage-specific reference has been loade
 
 ## Abstract Pattern
 
+Keep the abstract within 300 Chinese characters in the application-facing draft.
+
 ```text
-本申请公开了一种[发明名称]，涉及[技术领域]。该方法包括：获取[目标对象]的[输入数据]；根据所述[输入数据]构建[中间数据/特征/状态]；对所述[中间数据/特征/状态]进行[核心处理]，得到[处理结果]；基于所述[处理结果]生成[输出结果]；将所述[输出结果]提供给[应用模块/应用场景]。通过上述方式，本申请能够[技术效果1]，并为[技术效果2]提供依据。
+本申请公开了一种[发明名称]，涉及[技术领域]。该方法包括：获取[目标对象]的[输入数据]；根据所述[输入数据]构建[中间数据/特征/状态]；对所述[中间数据/特征/状态]进行[核心处理]，得到[处理结果]；基于所述[处理结果]生成[输出结果]；将所述[输出结果]提供给[应用模块/应用场景]。通过上述方式，本申请能够[技术效果]。
 ```
 
 ## Claim Step Verbs
@@ -48,4 +50,6 @@ Use this file for wording help after the stage-specific reference has been loade
 - 精度最高
 - 消融实验验证
 - 未来将实现
-- 自动控制全部过程, unless the paper supports closed-loop control
+- 自动完成全部控制过程, unless the paper supports closed-loop control
+- 如图所示, in claims
+- 如说明书所述, in claims

@@ -1,8 +1,11 @@
 .idea/
-.python-version
 __pycache__/
 *.pyc
 .pytest_cache/
 .venv/
 dist/
 build/
+
+# Local Word/PDF samples used only for analysis. Distilled guidance belongs in
+# paper-to-patent/references/ and paper-to-patent/assets/templates/.
+template/

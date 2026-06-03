@@ -40,6 +40,21 @@ class CheckSvgTests(unittest.TestCase):
         self.assertFalse(report["ok"])
         self.assertIn("SVG not found", report["errors"][0])
 
+    def test_strict_mode_fails_when_svg_has_warnings(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            svg = Path(tmp) / "color.svg"
+            svg.write_text(
+                "<svg width='100' height='80' xmlns='http://www.w3.org/2000/svg'>"
+                "<rect x='1' y='1' width='10' height='10' fill='red'/>"
+                "</svg>",
+                encoding="utf-8",
+            )
+
+            report = check_svg.inspect_svg(svg)
+
+            self.assertTrue(report["ok"])
+            self.assertFalse(check_svg.is_acceptable(report, strict=True))
+
 
 if __name__ == "__main__":
     unittest.main()

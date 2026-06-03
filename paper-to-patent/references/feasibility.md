@@ -2,12 +2,16 @@
 
 Use this file to decide whether a paper can reasonably be converted into Chinese invention patent drafting materials.
 
+## Source Priority
+
+Prefer the `.tex` source. Use PDF only when LaTeX is unavailable or for visual checks. If key method details, formulas, captions, or references are missing from PDF extraction, ask for the LaTeX project before continuing to claims.
+
 ## Positive Signals
 
 - Clear technical field and application scenario.
 - Clear technical problem in existing technology.
-- Distinct technical solution rather than only experiment comparison.
-- Executable processing flow with inputs, steps, intermediate results, and outputs.
+- Executable technical process with input, processing, intermediate result, output, and technical use.
+- Distinct model, algorithm, system, module structure, data construction, or optimization step.
 - Key features suitable for claims.
 - Technical effects connected to the solution.
 - Figures can express method flow, module structure, system architecture, data construction, model structure, or training/prediction process.
@@ -21,7 +25,7 @@ Use this file to decide whether a paper can reasonably be converted into Chinese
 - Future work written as if it were already implemented.
 - Algorithm detached from a concrete technical field.
 
-## Output Template
+## Output
 
 Create `draft/internal/专利可行性判断报告.md` using `assets/templates/feasibility-report.md`.
 
@@ -39,4 +43,4 @@ The report must include:
 
 ## Decision Rule
 
-If the paper is conditionally suitable, list the exact missing details needed before claims or specification drafting.
+If conditionally suitable, list the exact missing details needed before claims or specification drafting. Do not draft the five Markdown documents until the missing core technical loop is resolved.

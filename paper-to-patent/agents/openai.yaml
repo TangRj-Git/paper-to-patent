@@ -1,4 +1,4 @@
 interface:
   display_name: "小论文转发明专利"
-  short_description: "优先根据 LaTeX 小论文按阶段生成中国发明专利五书草稿和内部分析材料"
-  default_prompt: "请使用 paper-to-patent skill，以我提供的 main.tex 为主，先做 LaTeX 结构摘要、公开风险、技术交底、可行性、论文-专利映射、专属大纲和保护点策略，不要直接生成 Word 或批量生成图片。"
+  short_description: "优先根据 LaTeX 小论文按阶段生成中国发明专利五书 Markdown 草稿和后期附图"
+  default_prompt: "请使用 paper-to-patent skill，以我提供的 main.tex 为主，PDF 只做辅助核对，先做 LaTeX 结构摘要、公开风险、技术交底、可行性、论文-专利映射、专属大纲和保护点策略；请按阶段生成，不要一次性生成五书；不要生成 Word、PPT、DOCX，真实附图只在权利要求、说明书、说明书附图位置、说明书摘要和摘要附图位置确认后的后期阶段生成。"

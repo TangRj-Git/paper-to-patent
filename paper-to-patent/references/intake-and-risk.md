@@ -1,10 +1,11 @@
 # Intake And Public-Disclosure Risk
 
-Use this file before drafting when the user provides a paper, PDF, report, thesis draft, code notes, or experiment write-up.
+Use this file before drafting when the user provides a paper, report, thesis draft, code notes, or experiment write-up.
 
 ## Required Inputs
 
-- Paper text or PDF path.
+- Primary source: `.tex` entry file or LaTeX project folder when available.
+- Optional PDF for visual verification.
 - Publication status: unpublished, submitted, accepted, online, preprint, public defense, public report, repository, or unknown.
 - Target technical field and intended patent theme if known.
 - Any supervisor or patent-agent constraints.
@@ -14,7 +15,7 @@ Use this file before drafting when the user provides a paper, PDF, report, thesi
 
 Check whether the full technical solution has already been disclosed to the public through:
 
-- journal/conference online publication;
+- journal or conference online publication;
 - preprint platform;
 - public thesis defense or public report;
 - public code/data repository;
@@ -34,4 +35,4 @@ Create `draft/internal/公开时间与新颖性风险检查.md` when risk review
 
 ## Missing Information Rule
 
-If publication status is unknown, continue with feasibility only after marking risk as "unknown; user confirmation needed". Do not assert novelty safety.
+If publication status is unknown, continue only with clearly marked risk status: "unknown; user confirmation needed". Do not assert novelty safety, inventiveness, authorization, or grantability.
