@@ -4,6 +4,30 @@
 
 命令式使用流程见 [USER_GUIDE.md](USER_GUIDE.md)。普通使用者可以直接复制里面的阶段命令，让 Codex 按步骤分析自己的 `.tex` 小论文；不强制使用固定目录结构。
 
+## 安装和配置
+
+正式使用这个 skill 时，只需要把 `paper-to-patent/` 这个文件夹放到 Codex 能扫描的 skills 目录中。不要把整个仓库根目录当作 skill 目录；真正的 skill 目录必须直接包含 `SKILL.md`。
+
+个人全局使用时，推荐复制到：
+
+```text
+C:/Users/用户名/.agents/skills/paper-to-patent/
+```
+
+只在某个项目中使用时，可以复制到该项目根目录：
+
+```text
+项目根目录/.agents/skills/paper-to-patent/
+```
+
+配置完成后，建议重启 Codex 或新开一个 Codex 会话。然后在对话中显式触发：
+
+```text
+请使用 paper-to-patent skill，以当前文件夹里的 main.tex 为主，先执行第 1 阶段。
+```
+
+如果只是给别人安装使用，复制 `paper-to-patent/` 文件夹即可。仓库根目录下的 `README.md`、`USER_GUIDE.md`、`tests/`、`pyproject.toml` 和 `.python-version` 是项目说明、使用手册和开发测试材料，不是 Codex 加载 skill 的必需内容；如果希望对方能查看完整说明和运行测试，则建议提供整个仓库。
+
 ## 普通用户只看这里
 
 如果论文是 LaTeX，优先给 Codex：
